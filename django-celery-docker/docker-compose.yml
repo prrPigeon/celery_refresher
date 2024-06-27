@@ -1,0 +1,26 @@
+version: '3.3'
+
+services:
+
+  redis:
+    image: redis:7.0.11-alpine
+
+  django: 
+    container_name: django
+    build:
+      context: ./django_celery # Where the Dockerfile lives!
+    command:
+      sh -c "python manage.py makemigrations &&
+      python manage.py migrate &&
+      python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - ./django_celery:/usr/src/app/ # which folder to mouth (django_celery), and where(/usr/src/app/)
+    ports:
+      - 8001:8000 # map my 8001 to 8000 in container!
+    environment: # this is reduntant, for this purpose
+      - DEBUG=1
+      - SECRET_KEY=NOT_SO_SECRET_NOW:)11123323
+    depends_on:
+      - redis
+
+
