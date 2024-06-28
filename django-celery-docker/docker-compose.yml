@@ -23,4 +23,18 @@ services:
     depends_on:
       - redis
 
+  celery:
+    container_name: celery
+    build:
+      context: ./django_celery # Where the Dockerfile lives!
+    command: celery --app=django_celery worker -l INFO 
+    volumes:
+      - ./django_celery:/usr/src/app/ # which folder to mouth (django_celery), and where(/usr/src/app/)
+    environment: # this is reduntant, for this purpose
+      - DEBUG=1
+      - SECRET_KEY=NOT_SO_SECRET_NOW:)11123323
+    depends_on:
+      - redis
+
+
 
